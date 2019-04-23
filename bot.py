@@ -1,19 +1,20 @@
-from config import TOKEN
-from telegram.ext import Updater, CommandHandler
 import logging
+import handler
 
-updater = Updater(token=TOKEN)
+from config import TOKEN
 
-dispatcher = updater.dispatcher
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                      level=logging.INFO)
 
-def start(bot, update):
-	bot.send_message(chat_id=update.message.chat_id, text="I'm RobotaBot, hey!")
+start_handler = CommandHandler('start', handler.start)
+message_handler = MessageHandler(Filters.text, handler.check_message)
 
+updater = Updater(TOKEN)
+dispatcher = updater.dispatcher
 
-start_handler = CommandHandler('start', start)
 dispatcher.add_handler(start_handler)
+dispatcher.add_handler(message_handler)
 
 updater.start_polling()
