@@ -1,3 +1,5 @@
+from telegram.ext import CommandHandler, MessageHandler, Filters
+
 def start(bot, update):
     mensagem = "Olá! Sou o RobotaBot.\n\n"
     mensagem += "Por enquanto sou meio limitado e apenas procuro por e-mails novos na nossa conta do gmail, mas tenha paciência comigo, prometo melhorar :')."
@@ -22,3 +24,8 @@ def check_message(bot, update):
 
     if corrected_words:
         bot.send_message(update.message.chat_id, corrected_string, reply_to_message_id=message_id)
+
+HANDLERS = [
+    CommandHandler('start', start),
+    #MessageHandler(Filters.text, check_message),
+]

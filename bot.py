@@ -1,20 +1,16 @@
 import logging
-import handler
+from handler import HANDLERS
 
 from config import TOKEN
 
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+from telegram.ext import Updater
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                      level=logging.INFO)
 
-start_handler = CommandHandler('start', handler.start)
-message_handler = MessageHandler(Filters.text, handler.check_message)
-
 updater = Updater(TOKEN)
-dispatcher = updater.dispatcher
 
-dispatcher.add_handler(start_handler)
-dispatcher.add_handler(message_handler)
+for h in HANDLERS:
+    updater.dispatcher.add_handler(h)
 
 updater.start_polling()
