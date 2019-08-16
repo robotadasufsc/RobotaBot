@@ -1,5 +1,7 @@
 import email
 
+from classes.subject_parser import SubjectParser
+
 class MailWrapper:
     def __init__(self, mail):
         if isinstance(mail, bytes):
@@ -22,6 +24,6 @@ class MailWrapper:
         return self.mail['from']
 
     def get_subject(self):
-        return self.mail['subject']
-
+        subject = SubjectParser(self.mail['subject'])
+        return subject.text
 
