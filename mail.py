@@ -3,6 +3,7 @@ import requests
 
 from classes.mail_wrapper import MailWrapper
 from classes.imap import ImapGmailWrapper
+from classes.types import MailSenderSubject
 
 from config import mail, app_password, url_telegram, chat_id
 
@@ -21,24 +22,23 @@ def check_gmail():
         current_mail_id = int(file_reader.read())
 
         if possible_new_email_id > current_mail_id:
-            latest_email_id = possible_new_email_id
-            number_of_new_mails = latest_email_id - current_mail_id
-
             file_reader.close()
-
+            
+            latest_email_id = possible_new_email_id
             save_latest_email_id(latest_email_id)
 
-            raw_email = imap.fetchs([latest_email_id])
+            senders_subjects = []
+            message = 'Shalom Adonai, irmãos. Novo(s) e-mail(s), deem uma olhada:\n'
 
-            mail_parser = MailWrapper(raw_email)
-            sender = mail_parser.get_sender()
+            for mail_id in range(current_mail_id + 1, latest_email_id + 1):
+                raw_email = imap.fetchs([mail_id])
 
-            subject = mail_parser.get_subject()
+                mail_parser = MailWrapper(raw_email)
 
-            if number_of_new_mails > 1:
-                message = 'Shalom Adonai, irmãos. {} novos emails, deem uma olhada.'.format(number_of_new_mails) 
-            else:
-                message = 'Shalom Adonai, irmãos. Novo email, deem uma olhada.\n\nTítulo: {}\n\nRemetente: {}'.format(subject, sender) 
+                senders_subjects.append(MailSenderSubject(mail_parser.get_sender(), mail_parser.get_subject()))
+
+            for ss in senders_subjects:
+                message += '\nRemetente: {}\nTítulo: {}\n'.format(ss.sender, ss.subject)
 
             send_message(message)
 
