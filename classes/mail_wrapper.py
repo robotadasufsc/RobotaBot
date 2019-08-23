@@ -25,6 +25,5 @@ class MailWrapper:
 
     def get_subject(self):
         subject = SubjectParser(self.mail['subject'])
-        print(subject.text)
         return subject.text
 
