@@ -1,7 +1,7 @@
 import os
 import requests
 
-from classes.email import MailWrapper
+from classes.mail_wrapper import MailWrapper
 from classes.imap import ImapGmailWrapper
 
 from config import mail, app_password, url_telegram, chat_id
@@ -33,10 +33,12 @@ def check_gmail():
             mail_parser = MailWrapper(raw_email)
             sender = mail_parser.get_sender()
 
+            subject = mail_parser.get_subject()
+
             if number_of_new_mails > 1:
                 message = 'Shalom Adonai, irmãos. {} novos emails, deem uma olhada.'.format(number_of_new_mails) 
             else:
-                message = 'Shalom Adonai, irmãos. Novo email, deem uma olhada.\n\nRemetente: {}'.format(sender) 
+                message = 'Shalom Adonai, irmãos. Novo email, deem uma olhada.\n\nTítulo: {}\n\nRemetente: {}'.format(subject, sender) 
 
             send_message(message)
 

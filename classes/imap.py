@@ -2,7 +2,7 @@ from config import mail, app_password
 
 from imaplib import IMAP4_SSL
 
-from classes.email import MailWrapper
+from classes.mail_wrapper import MailWrapper
 
 class ImapGmailWrapper:
 
